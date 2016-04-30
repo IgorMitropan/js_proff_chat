@@ -1,0 +1,42 @@
+<% layout('./layout/page') -%>
+
+<% block('title', 'Socket IO Chat')%>
+
+<% block('scripts', '<script src="./bower_components/jquery/dist/jquery.min.js" defer></script>'+
+                    '<script src="./bower_components/bootstrap/dist/js/bootstrap.min.js" defer></script>'+
+                    '<script src="./bower_components/socket.io-client/socket.io.js" defer></script>'+
+                    '<script src="./js/chat.js" defer></script>')%>
+
+<% block('header', 'Main page')%>
+
+<% block('footer', '<h3><i>Description:</i></h3>'+
+                    '<p><i>This is a simple chat, based on Node.js, Express and Socket.IO. You can see contacts online or offline, whole chat history and you need to log in to send your own messages.</i></p>'+
+                    '<p><i>Features: You can click on a contact in the contact list or on any message in aim to mention it, and appropriate text will appear in the input box.</i></p>'+
+                    '<p>&#169 <a href="http://github.com/IgorMitropan">Igor Mitropan</a></p>')%>
+
+    <% if (!user) { %>
+        <%-partial('./partials/loginModal')%>
+    <% } %>
+
+    <div class="row row-content">
+        <div class="col-xs-4 col-sm-3 col-lg-2">
+            <fieldset>
+                <legend>Contact list</legend>
+                <div data-component="contactList" class="contactList">
+                    <ul></ul>
+                </div>
+            </fieldset>
+        </div>
+        <div class="col-xs-8 col-sm-9 col-lg-10">
+            <fieldset class="messagesViewerField">
+                <legend>Messages</legend>
+                <div data-component="messagesViewer" class="messagesViewer"></div>
+            </fieldset>
+            <br>
+
+            <% if (user) { %>
+                <%-partial('./partials/messageSenderComponent')%>
+            <% } %>
+        </div>
+    </div>
+

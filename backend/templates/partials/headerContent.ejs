@@ -1,0 +1,7 @@
+<% if (user) { %>
+    <h3>Hello, <%=user.get('username')%>! <i data-selector="status"></i></h3>
+<% } else { %>
+    <p>
+        You need to log in to send your own messages.
+    </p>
+<% } %>

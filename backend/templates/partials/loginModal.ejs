@@ -1,0 +1,27 @@
+<div id="loginModal" class="modal fade" role="dialog" data-component="loginModal">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Login / Register </h4>
+                <p data-selector="notification">
+                    Input login and password. If there is no such user it will be automatically created.
+                </p>
+            </div>
+            <div class="modal-body">
+                <form class="form-inline" data-selector="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control input-sm" name="login" placeholder="Login">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control input-sm" name="password" placeholder="Password">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-sm" data-selector="submitButton">Sign in</button>
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

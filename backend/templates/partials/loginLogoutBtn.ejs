@@ -1,0 +1,13 @@
+<ul class="login-logout">
+    <% if (user) { %>
+        <li>
+            <a id="logoutBtn"> <span class="glyphicon glyphicon-log-out"></span> Logout</a>
+        </li>
+    <% } else { %>
+        <li>
+            <a id="loginBtn" data-toggle="modal" data-target="#loginModal"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+        </li>
+    <% } %>
+</ul>
+
+

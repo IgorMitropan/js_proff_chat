@@ -2,7 +2,7 @@
   "name": "js_proff_chat",
   "version": "1.0.0",
   "description": "This is a simple chat with Socket.IO",
-  "main": "webpack.config.js",
+  "main": "app.js",
   "private": true,
   "scripts": {
     "start": "node app.js",

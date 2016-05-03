@@ -7,6 +7,6 @@ let page = new Page({
 
 let logoutBtn = document.getElementById('logoutBtn');
 if (logoutBtn) {
-    logoutBtn.addEventListener('click', page.signOut.bind(page));
+    logoutBtn.addEventListener('click', Page.signOut);
 }
 

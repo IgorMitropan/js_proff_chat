@@ -19,7 +19,7 @@ exports.post = function(req, res, next) {
             }
 
             req.session.user = user._id;
-            io.sessionReload(io, req.session.id);
+            io.sessionReload(req.session.id);
 
             res.json({});
         });

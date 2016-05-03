@@ -9,17 +9,7 @@ export default class ContactList extends Component{
         this.on('click',this._onClick.bind(this));
     }
 
-    _onClick(event) {
-        let target = event.target.closest('span');
-
-        if(!target) {
-            return;
-        }
-
-        this._trigger('contactWasClicked', {contactName: target.textContent});
-    }
-
-
+//-----------------------public methods---------------
     showContent(contacts) {
         this._contacts = JSON.parse(contacts);
 
@@ -30,36 +20,45 @@ export default class ContactList extends Component{
 
     updateContactsOnline(contactsOnline) {
         if (!(contactsOnline instanceof Array)) {
-            let contact = contactsOnline;
-            contactsOnline = [];
-            contactsOnline.push(contact);
+            contactsOnline = [contactsOnline];
         }
 
         contactsOnline.forEach(contact => {
-            let index = this._contacts.indexOf(contact);
+            this._updateContact(contact,  this._showContactOnline.bind(this));
 
-            if (index > -1) {
-                this._showContactOnline(index);
-            } else {
-                this._contacts.push(contact);
-                this.addContact(contact);
-
-                this._showContactOnline(this._contacts.length - 1);
-            }
+            this._contacts.unshift(contact);
         });
     }
 
-    updateContactOffline(contactName) {
-        let index = this._contacts.indexOf(contactName);
+    updateContactOffline(contact) {
+        this._updateContact(contact,  this._showContactOffline.bind(this));
+
+        this._contacts.push(contact);
+    }
+
+//-----------------event handler-------------------
+    _onClick(event) {
+        let target = event.target.closest('span');
+
+        if(!target) {
+            return;
+        }
+
+        this._trigger('contactWasClicked', {contactName: target.textContent});
+    }
+
+//----------------------- subordinate private method ---------------
+    _updateContact(contact, fn) {
+        let index = this._contacts.indexOf(contact);
 
         if (index > -1) {
-            this._showContactOffline(index);
-            } else {
-                this._contacts.push(contactName);
-                this.addContact(contactName);
+            this._contacts.splice(index, 1);
 
-                this._showContactOffline(this._contacts.length - 1);
-            }
+            fn(index);
+        } else {
+            this.addContact(contact);
+            fn(this._contacts.length);
+        }
     }
 
 //------------------subordinate non-logical methods working with view---------------
@@ -74,6 +73,8 @@ export default class ContactList extends Component{
 
         ul.children[index].classList.remove('offline');
         ul.children[index].classList.add('online');
+
+        ul.insertBefore(ul.children[index], ul.firstElementChild);
     }
 
     _showContactOffline(index) {
@@ -81,5 +82,7 @@ export default class ContactList extends Component{
 
         ul.children[index].classList.remove('online');
         ul.children[index].classList.add('offline');
+
+        ul.appendChild(ul.children[index]);
     }
 }

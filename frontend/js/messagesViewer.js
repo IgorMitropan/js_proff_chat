@@ -9,7 +9,12 @@ export default class MessagesViewer extends Component{
     }
 
     static _dateParse(str) {
-        let date = new Date(str);
+        let date;
+        try {
+            date = new Date(str);
+        } catch (e) {
+            date = Date.now();
+        }
 
         let month = date.getMonth() + 1;
         let day = date.getDate();
@@ -39,6 +44,7 @@ export default class MessagesViewer extends Component{
 
     }
 
+//------------- non-logical methods working with view---------------
     addMessage(data) {
         let created = MessagesViewer._dateParse(data.created);
 
@@ -54,6 +60,7 @@ export default class MessagesViewer extends Component{
         message.appendChild(text);
 
         this._el.appendChild(message);
+
         this._el.scrollTop += 100;
     }
 

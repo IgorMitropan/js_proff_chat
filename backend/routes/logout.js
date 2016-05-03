@@ -4,7 +4,7 @@ exports.post = function(req, res, next) {
     let io = req.app.get('io');
 
     req.session.destroy(function(err) {
-        io.sessionReload(io, sid);
+        io.sessionReload(sid);
         if (err) return next(err);
 
         res.redirect('/');

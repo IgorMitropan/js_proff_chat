@@ -40,8 +40,8 @@ module.exports = function(server) {
         }
     });
 
-    io.sessionReload = function(io, sid) {
-        let clients = io.sockets.connected;
+    io.sessionReload = function(sid) {
+        let clients = this.sockets.connected;
 
         for (let key in clients) {
             if (clients[key].handshake.session.id === sid) {

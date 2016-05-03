@@ -19,22 +19,19 @@ export default class Page {
         this._contactList = new ContactList({
             element: this._el.querySelector('[data-component="contactList"]')
         });
-        this._contactList.on('contactWasClicked', this._onContactWasClicked.bind(this));
-
         this._loadContactList();
 
         this._messagesViewer = new MessagesViewer({
             element: this._el.querySelector('[data-component="messagesViewer"]')
         });
-        this._messagesViewer.on('messageWasClicked', this._onMessageWasClicked.bind(this));
-
         this._loadMessages();
 
-        let messageSender = this._el.querySelector('[data-component="messageSender"]');
-        if (messageSender) {
-            this._messageSender = new MessageSender({element: messageSender});
-            this._messageSender.on('send', this._sendMessage.bind(this));
-        }
+        this.socket = io();
+        this.socket.on('connect', this._onSocketConnected.bind(this));
+        this.socket.on('change user status', Page._changeUserStatus.bind(this));
+        this.socket.on('leave', this._contactList.updateContactOffline.bind(this._contactList));
+        this.socket.on('join', this._contactList.updateContactsOnline.bind(this._contactList));
+        this.socket.on('message', this._messagesViewer.addMessage.bind(this._messagesViewer));
 
         let loginModal = this._el.querySelector('[data-component="loginModal"]');
         if (loginModal) {
@@ -42,24 +39,32 @@ export default class Page {
             this._loginModal.on('signIn', this._signIn.bind(this));
         }
 
-        this.socket = io();
-        this.socket.on('connect', this._onSocketConnected.bind(this));
-        this.socket.on('disconnect', this._onSocketDisconnected.bind(this));
-        this.socket.on('change user status', this._changeUserStatus.bind(this));
-        this.socket.on('leave', this._contactList.updateContactOffline.bind(this._contactList));
-        this.socket.on('join', this._contactList.updateContactsOnline.bind(this._contactList));
-        this.socket.on('message', this._messagesViewer.addMessage.bind(this._messagesViewer));
-        this.socket.on('error saving message', this._messageSender.showLoadError.bind(this._messageSender));
+        let messageSender = this._el.querySelector('[data-component="messageSender"]');
+        if (messageSender) {
+            this._messageSender = new MessageSender({element: messageSender});
+            this._messageSender.on('send', this._sendMessage.bind(this));
+
+            this.socket.on('disconnect', this._onSocketDisconnected.bind(this));
+            this.socket.on('error saving message', this._messageSender.showLoadError.bind(this._messageSender));
+
+            this._messagesViewer.on('messageWasClicked', this._onMessageWasClicked.bind(this));
+            this._contactList.on('contactWasClicked', this._onContactWasClicked.bind(this));
+        }
     }
 
-//---------------- public method-----------------
-    signOut(event) {
+//---------------- static public method-----------------
+    static signOut(event) {
         event.preventDefault();
 
         AjaxService.ajax('/logout', {
             method: 'POST'
         }).then(
-            this._changeUserStatus.bind(this));
+            Page._changeUserStatus);
+    }
+
+//---------------- static private method-----------------
+    static _changeUserStatus() {
+        location.reload();
     }
 
 //------------------event handlers---------------
@@ -68,36 +73,35 @@ export default class Page {
             method: 'POST',
             body: event.detail
         }).then(
-            this._changeUserStatus.bind(this),
+           Page._changeUserStatus,
             this._loginModal.showLoadError.bind(this._loginModal));
     }
 
-    _onContactWasClicked(event) {
-        if (this._messageSender) {
-            this._messageSender.mentionContact(event.detail.contactName);
-        }
-    }
-
-    _onMessageWasClicked(event) {
-        if (this._messageSender) {
-            this._messageSender.quoteMessage(event.detail);
-        }
-    }
-
     _onSocketConnected() {
-        document.querySelector('[data-selector="status"]').textContent = 'You are online!';
-        this._messageSender.activateInput();
-
         this.socket.emit('Who is online?', '', this._contactList.updateContactsOnline.bind(this._contactList));
+
+        if (this._messageSender) {
+            document.querySelector('[data-selector="status"]').textContent = 'You are online!';
+            this._messageSender.activateInput();
+        }
     }
 
     _onSocketDisconnected() {
         document.querySelector('[data-selector="status"]').textContent = 'Sorry, connection lost...';
-        this._messageSender.disactivateInput();
+        this._messageSender.disActivateInput();
     }
 
     _sendMessage(event) {
         this.socket.emit('message', event.detail.message, this._messageSender.resetText.bind(this._messageSender));
+    }
+
+    _onContactWasClicked(event) {
+        this._messageSender.mentionContact(event.detail.contactName);
+    }
+
+    _onMessageWasClicked(event) {
+        this._messageSender.quoteMessage(event.detail);
+
     }
 
 //----------------subordinate private methods--------------
@@ -112,9 +116,5 @@ export default class Page {
         AjaxService.ajax('/messages', {}).then(
             this._messagesViewer.showContent.bind(this._messagesViewer),
             this._messagesViewer.showLoadError.bind(this._messagesViewer));
-    }
-
-    _changeUserStatus() {
-        location.reload();
     }
 }

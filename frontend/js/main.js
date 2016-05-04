@@ -7,6 +7,7 @@ let page = new Page({
 
 let logoutBtn = document.getElementById('logoutBtn');
 if (logoutBtn) {
-    logoutBtn.addEventListener('click', Page.signOut);
+    logoutBtn.addEventListener('click', page.signOut.bind(page));
 }
 
+window.onbeforeunload = page.leaveChat.bind(page);

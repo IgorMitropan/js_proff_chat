@@ -1,6 +1,6 @@
 'use strict';
 const config = require('../config');
-
+let log = require('../lib/log')(module);
 let Message = require('../models/message').Message;
 
 module.exports = function(server) {
@@ -26,12 +26,18 @@ module.exports = function(server) {
 
                 Message.saveMessage(username, text, date, function (err, message) {
                     if (err) {
-                        socket.server.emit('error saving message', err);
+                        socket.emit('error saving message', err);
                     } else {
                         socket.server.emit('message', message);
                         cb && cb();
                     }
                 });
+            });
+
+            socket.on('Contact has left', function() {
+                log.debug('User ' + username + 'has left');
+                socket.server.emit('leave', username);
+                socket.disconnect();
             });
 
             socket.on('disconnect', function() {

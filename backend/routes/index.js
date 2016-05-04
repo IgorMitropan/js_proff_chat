@@ -4,7 +4,7 @@ const router = express.Router();
 
 let checkAuth = require('../middleware/checkAuth');
 
-router.get('/', function (req, res, next) {
+router.get('/', function (req, res) {
     res.render('index', {});
     });
 
@@ -17,7 +17,7 @@ router.get('/messages', require('./messages').get);
 /* authorization */
 router.post('/login', require('./login').post);
 
-router.post('/logout', require('./logout').post);
+router.post('/logout', checkAuth, require('./logout').post);
 
 module.exports = router;
 

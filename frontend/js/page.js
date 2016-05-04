@@ -52,19 +52,25 @@ export default class Page {
         }
     }
 
-//---------------- static public method-----------------
-    static signOut(event) {
+//---------------- static private method-----------------
+    static _changeUserStatus() {
+        location.reload();
+    }
+
+//---------------- public methods-----------------
+    signOut(event) {
         event.preventDefault();
 
         AjaxService.ajax('/logout', {
             method: 'POST'
-        }).then(
-            Page._changeUserStatus);
+        }).then(Page._changeUserStatus)
+            .then(this.leaveChat.bind(this));
     }
 
-//---------------- static private method-----------------
-    static _changeUserStatus() {
-        location.reload();
+/*--------------------------- method generates custom event on socket IO,
+--in order to prevent big timeout in standard 'disconnect' event processing on OpenShift hosting------*/
+    leaveChat() {
+        this.socket.emit('Contact has left');
     }
 
 //------------------event handlers---------------

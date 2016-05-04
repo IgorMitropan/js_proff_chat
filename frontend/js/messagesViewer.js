@@ -61,7 +61,7 @@ export default class MessagesViewer extends Component{
 
         this._el.appendChild(message);
 
-        this._el.scrollTop += 100;
+        this._el.scrollTop = this._el.scrollHeight;
     }
 
     _onClick(event) {

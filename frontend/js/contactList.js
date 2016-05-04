@@ -11,29 +11,31 @@ export default class ContactList extends Component{
 
 //-----------------------public methods---------------
     showContent(contacts) {
-        this._contacts = JSON.parse(contacts);
+        this._fillContactList(contacts);
 
-        this._contacts.forEach(contact => {
-            this.addContact(contact)
-        });
+        this._renderContent();
     }
 
-    updateContactsOnline(contactsOnline) {
-        if (!(contactsOnline instanceof Array)) {
-            contactsOnline = [contactsOnline];
+    updateContactsOnline(contactNames) {
+        if (!(contactNames instanceof Array)) {
+            contactNames = [contactNames];
         }
 
-        contactsOnline.forEach(contact => {
-            this._updateContact(contact,  this._showContactOnline.bind(this));
-
-            this._contacts.unshift(contact);
+        contactNames.forEach(contactName => {
+            this._updateContact(contactName,  'online');
         });
+
+        this._contacts.sort(this._compareContacts);
+
+        this._renderContent();
     }
 
-    updateContactOffline(contact) {
-        this._updateContact(contact,  this._showContactOffline.bind(this));
+    updateContactOffline(contactName) {
+        this._updateContact(contactName,  'offline');
 
-        this._contacts.push(contact);
+        this._contacts.sort(this._compareContacts);
+
+        this._renderContent();
     }
 
 //-----------------event handler-------------------
@@ -48,41 +50,52 @@ export default class ContactList extends Component{
     }
 
 //----------------------- subordinate private method ---------------
-    _updateContact(contact, fn) {
-        let index = this._contacts.indexOf(contact);
+    _fillContactList(contacts) {
+        JSON.parse(contacts).sort().forEach( contact => {
+            this._contacts.push({name: contact, status: 'offline'})
+        });
+    }
 
-        if (index > -1) {
-            this._contacts.splice(index, 1);
+    _renderContent() {
+        this._el.innerHTML = '<ul></ul>';
 
-            fn(index);
-        } else {
-            this.addContact(contact);
-            fn(this._contacts.length);
+        this._contacts.forEach(contact => {
+            this.addContact(contact)
+        });
+    }
+
+    _updateContact(contactName, status) {
+        let flag = false;
+
+        for (let i = 0; i < this._contacts.length; i++) {
+            if (this._contacts[i].name === contactName) {
+                this._contacts[i].status = status;
+
+                flag = true;
+            }
+        }
+
+        if (!flag) {
+            this._contacts.push({name: contactName, status: status});
         }
     }
 
-//------------------subordinate non-logical methods working with view---------------
+    _compareContacts(first, second) {
+        if (first.status !== second.status) {
+            if (first.status === 'online') {
+                return -1;
+            } else {
+                return 1;
+            }
+        } else {
+            return (first.name.toLowerCase() > second.name.toLowerCase());
+        }
+    }
+
+//------------------subordinate non-logical method working with view---------------
     addContact(contactName) {
         let ul = this._el.querySelector('ul');
-        let newItem = '<li class="offline"><span>' + contactName + '</span></li>' + '\n';
+        let newItem = '<li class="' + contactName.status + '"><span>' + contactName.name + '</span></li>' + '\n';
         ul.insertAdjacentHTML('beforeEnd', newItem);
-    }
-
-    _showContactOnline(index) {
-        let ul = this._el.querySelector('ul');
-
-        ul.children[index].classList.remove('offline');
-        ul.children[index].classList.add('online');
-
-        ul.insertBefore(ul.children[index], ul.firstElementChild);
-    }
-
-    _showContactOffline(index) {
-        let ul = this._el.querySelector('ul');
-
-        ul.children[index].classList.remove('online');
-        ul.children[index].classList.add('offline');
-
-        ul.appendChild(ul.children[index]);
     }
 }

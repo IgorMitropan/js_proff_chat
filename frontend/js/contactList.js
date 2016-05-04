@@ -12,6 +12,7 @@ export default class ContactList extends Component{
 //-----------------------public methods---------------
     showContent(contacts) {
         this._fillContactList(contacts);
+        this._contacts.sort(this._compareContacts);
 
         this._renderContent();
     }
@@ -51,7 +52,7 @@ export default class ContactList extends Component{
 
 //----------------------- subordinate private method ---------------
     _fillContactList(contacts) {
-        JSON.parse(contacts).sort().forEach( contact => {
+        JSON.parse(contacts).forEach(contact => {
             this._contacts.push({name: contact, status: 'offline'})
         });
     }

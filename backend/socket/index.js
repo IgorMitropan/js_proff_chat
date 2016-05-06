@@ -34,14 +34,12 @@ module.exports = function(server) {
                 });
             });
 
-            socket.on('Contact has left', function() {
-                log.debug('User ' + username + 'has left');
-                socket.server.emit('leave', username);
-                socket.disconnect();
-            });
-
             socket.on('disconnect', function() {
-                socket.broadcast.emit('leave', username);
+                connectedUsers = getConnectedUsers(this.nsp.connected);
+
+                if (connectedUsers.indexOf(username) === -1) {
+                    socket.broadcast.emit('leave', username);
+                }
             });
         }
     });

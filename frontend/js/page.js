@@ -26,7 +26,7 @@ export default class Page {
         });
         this._loadMessages();
 
-        this.socket = io();
+        this.socket = io(options.webSocketURL || '');
         this.socket.on('connect', this._onSocketConnected.bind(this));
         this.socket.on('change user status', Page._changeUserStatus.bind(this));
         this.socket.on('leave', this._contactList.updateContactOffline.bind(this._contactList));
@@ -37,6 +37,11 @@ export default class Page {
         if (loginModal) {
             this._loginModal = new LoginModal({element: loginModal});
             this._loginModal.on('signIn', this._signIn.bind(this));
+        }
+
+        this._logoutBtn = document.getElementById('logoutBtn');
+        if (this._logoutBtn) {
+            this._logoutBtn.addEventListener('click', Page._signOut);
         }
 
         let messageSender = this._el.querySelector('[data-component="messageSender"]');
@@ -52,25 +57,17 @@ export default class Page {
         }
     }
 
-//---------------- static private method-----------------
-    static _changeUserStatus() {
-        location.reload();
-    }
-
-//---------------- public methods-----------------
-    signOut(event) {
+//---------------- static private methods-----------------
+    static _signOut(event) {
         event.preventDefault();
 
         AjaxService.ajax('/logout', {
             method: 'POST'
-        }).then(Page._changeUserStatus)
-            .then(this.leaveChat.bind(this));
+        }).then(Page._changeUserStatus);
     }
 
-/*--------------------------- method generates custom event on socket IO,
---in order to prevent big timeout in standard 'disconnect' event processing on OpenShift hosting------*/
-    leaveChat() {
-        this.socket.emit('Contact has left');
+    static _changeUserStatus() {
+        location.reload();
     }
 
 //------------------event handlers---------------

@@ -8,7 +8,22 @@ exports.get = function(req, res, next) {
             next(new HttpError(500, "Connection to database failed"));
         }
 
-        res.json(results);
+        let messages = [];
+
+        results.forEach(item => {
+            let message = {
+                username: item.username,
+                message: item.message,
+                created: item.created
+            };
+            messages.push(message);
+        });
+
+        messages.sort((first, second) => {
+            return (first.created - second.created);
+        });
+
+        res.json(messages);
     });
 };
 

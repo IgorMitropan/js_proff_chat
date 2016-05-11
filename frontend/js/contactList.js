@@ -9,10 +9,27 @@ export default class ContactList extends Component{
         this.on('click',this._onClick.bind(this));
     }
 
+//-------------------- static private method-----------------
+    static _compareContacts(first, second) {
+        if (first.status !== second.status) {
+            if (first.status === 'online') {
+                return -1;
+            } else {
+                return 1;
+            }
+        } else {
+            if (first.name.toLowerCase() > second.name.toLowerCase()) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+    }
+
 //-----------------------public methods---------------
     showContent(contacts) {
         this._fillContactList(contacts);
-        this._contacts.sort(this._compareContacts);
+        this._contacts.sort(ContactList._compareContacts);
 
         this._renderContent();
     }
@@ -26,7 +43,7 @@ export default class ContactList extends Component{
             this._updateContact(contactName,  'online');
         });
 
-        this._contacts.sort(this._compareContacts);
+        this._contacts.sort(ContactList._compareContacts);
 
         this._renderContent();
     }
@@ -34,7 +51,7 @@ export default class ContactList extends Component{
     updateContactOffline(contactName) {
         this._updateContact(contactName,  'offline');
 
-        this._contacts.sort(this._compareContacts);
+        this._contacts.sort(ContactList._compareContacts);
 
         this._renderContent();
     }
@@ -78,18 +95,6 @@ export default class ContactList extends Component{
 
         if (!flag) {
             this._contacts.push({name: contactName, status: status});
-        }
-    }
-
-    _compareContacts(first, second) {
-        if (first.status !== second.status) {
-            if (first.status === 'online') {
-                return -1;
-            } else {
-                return 1;
-            }
-        } else {
-            return (first.name.toLowerCase() > second.name.toLowerCase());
         }
     }
 

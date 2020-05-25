@@ -1,0 +1,111 @@
+.jumbotron {
+    padding-top: 18px;
+    padding-bottom: 18px;
+    background: darkseagreen;
+    color: floralwhite;
+}
+.login-logout {
+    margin-top: 20px;
+    float:right;
+    list-style: none;
+    font-size: 24px;
+}
+.login-logout a {
+    color: floralwhite;
+}
+.login-logout a:hover {
+    font-size: 28px;
+    text-decoration: none;
+}
+
+fieldset {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 4px;
+    border: 1px solid darkseagreen;
+    display: inline-block;
+    vertical-align: middle;
+    overflow: auto;
+}
+legend {
+    color: darkseagreen;
+    margin-bottom: 5px;
+}
+
+.contactList {
+    overflow: auto;
+    min-width: 130px;
+}
+ul {
+    list-style: none;
+}
+li.offline {
+    list-style-image: url(../images/offline.png);
+}
+li.online {
+    list-style-image: url(../images/online.png);
+}
+
+.messagesViewer {
+     max-height: 400px;
+     overflow: auto;
+}
+.messagesViewerField {
+    width: 80%;
+}
+.message {
+    display: block;
+    margin-bottom: 8px;
+    padding: 5px;
+    border: 1px solid transparent;
+    max-width: 700px;
+    background-color: transparent;
+}
+.messageHeader {
+    color: darkseagreen;
+    margin-bottom: 1px;
+    font-size: 14px;
+}
+
+.messageSender {
+    width: 80%;
+    height: 90px;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 4px;
+    border: 1px solid darkseagreen;
+    display: inline-block;
+    vertical-align: middle;
+    overflow: hidden;
+}
+textarea {
+    width: 80%;
+    height: 68px;
+    resize: none;
+    border: 1px solid darkseagreen;
+}
+
+.btn {
+    padding: 8px 12px;
+}
+.btn-primary {
+    background-color: darkseagreen;
+    border-color: darkseagreen;
+}
+
+.btn-primary:hover{
+    background-color: darkseagreen;
+    border-color: darkolivegreen;
+}
+.sendBtn {
+    width: 15%;
+    margin-top: -60px;
+    margin-left: 5px;
+}
+
+.row-footer {
+    color: lightslategray;
+}
+.js-hidden {
+    display: none;
+}

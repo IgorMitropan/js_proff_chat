@@ -1,0 +1,27 @@
+{
+  "origins": "localhost:*",
+  "port": 3000,
+  "IP": "",
+  "connectionUrlToDB": "mongodb://localhost:27017/chat",
+  "mongoose": {
+    "uri": "mongodb://localhost/chat",
+    "options": {
+      "server": {
+        "socketOptions": {
+          "keepAlive": 1
+        }
+      }
+    }
+  },
+  "session": {
+    "secret": "IKnowWhoKilledKennedy",
+    "resave": true,
+    "saveUninitialized": true,
+    "key": "sid",
+    "cookie": {
+      "path": "/",
+      "httpOnly": true,
+      "maxAge": null
+    }
+  }
+}

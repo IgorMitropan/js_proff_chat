@@ -1,0 +1,5 @@
+<% layout('./layout/page') -%>
+<% block('title', 'Error'); %>
+
+<h2>Status <%= error.status %> <%= message %></h2>
+<p><%= error.stack %></p>

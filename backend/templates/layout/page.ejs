@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%=blocks.title%></title>
+
+    <link rel="stylesheet" href="./bower_components/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="./css/style.css"/>
+
+    <%-blocks.scripts%>
+</head>
+<body>
+    <header class ="jumbotron">
+        <div class="container">
+            <div class="row row-header">
+                <% if (blocks.header) { %>
+                    <%-partial('../partials/loginLogoutBtn')%>
+                    <h2> <%-blocks.title%> </h2>
+                    <%-partial('../partials/headerContent')%>
+                <% } else {%>
+                    <h1> <%-blocks.title%> </h1>
+                <% } %>
+            </div>
+        </div>
+    </header>
+
+    <section class="container" id="container">
+        <%-body -%>
+    </section>
+
+    <footer class="row-footer">
+        <div class="container">
+            <div class="row">
+                <%-blocks.footer%>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
